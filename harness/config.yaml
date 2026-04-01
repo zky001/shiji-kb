@@ -1,0 +1,38 @@
+asr:
+  endpoint: "http://192.168.196.191:8015"
+  model: "paraformer-zh"
+  timeout: 300               # 长录音需要更长超时
+
+local_model:
+  endpoint: "http://192.168.196.191:8017/v1/chat/completions"
+  model_name: "Qwen3.5-2B"
+  max_tokens: 512
+  temperature: 0.1
+  timeout: 30
+
+db:
+  path: "kg.db"
+
+skill_dir: "skills"
+
+pipeline:
+  asr:
+    enabled: true            # 音频文件自动触发，txt 文件跳过
+  clean:
+    enabled: true
+    batch_size: 15          # 每批行数，2B模型较小批次更稳定
+  segment:
+    enabled: true
+    max_lines_per_segment: 30
+  extract:
+    enabled: true
+  track_persons:
+    enabled: true
+  reflect:
+    enabled: true
+    max_rounds: 3
+
+skill_management:
+  max_rules_per_skill: 20   # 禁止规则区超过此数触发蒸馏
+  distill_trigger_count: 10 # 累积N条新规则后触发压缩
+  reflection_open_errors: true
